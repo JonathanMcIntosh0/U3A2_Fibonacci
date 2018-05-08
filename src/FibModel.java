@@ -1,24 +1,32 @@
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  *Database
  */
-public class FibModel {
+class FibModel {
 
-    private int index;
-    private boolean currentIndexValide = false;
+    private final List<Long> numberList = new ArrayList<>();
 
-    int getIndex() {
-        return index;
+    FibModel() {
+        numberList.add(1L);
+        numberList.add(1L);
     }
 
-    void setIndex(int index) {
-        this.index = index;
+    long getFibonacciNum(int index) throws ArithmeticException {
+        if (numberList.size() < index) calcFibonacciNum(index);
+        return numberList.get(index - 1);
     }
 
-    boolean isCurrentIndexValide() {
-        return currentIndexValide;
+    private void calcFibonacciNum(int index) throws ArithmeticException {
+        for (int i = numberList.size() - 1; i < index; i++) {
+            long nextNumber = numberList.get(i) + numberList.get(i - 1);
+            if (nextNumber < 0) {
+                throw new ArithmeticException();
+            } else {
+                numberList.add(nextNumber);
+            }
+        }
     }
 
-    void setCurrentIndexValide(boolean currentIndexValide) {
-        this.currentIndexValide = currentIndexValide;
-    }
 }

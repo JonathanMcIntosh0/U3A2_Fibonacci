@@ -1,46 +1,32 @@
-import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.*;
-import javafx.stage.Stage;
 /**
  *Interface
  */
-class FibView extends Application {
+class FibView {
 
     private static final int SCENE_WIDTH = 350;
     private static final int SCENE_HEIGHT = 230;
 
-    private Text txtMessage = new Text();
-
-    private FibPresenter fibPresenter;
-
-    FibView() {
-
-    }
+    private final TextField tfIndex  = new TextField();
+    private Text txtMessage;
 
     //    CRÉATION DU GRAPHIQUE
 
     /**
      * Crée le graphique
      */
-    @Override
-    public void start(Stage primaryStage) throws Exception{
-        super.init();
-
-        primaryStage.setTitle("Nombres Fibonacci");
+    public Scene getScene() {
         VBox layout = createMainLayout();
 
-        Scene scene = new Scene(layout, SCENE_WIDTH, SCENE_HEIGHT);
-        primaryStage.setScene(scene);
-        primaryStage.show();
+        return new Scene(layout, SCENE_WIDTH, SCENE_HEIGHT);
     }
 
     private VBox createMainLayout() {
@@ -49,7 +35,6 @@ class FibView extends Application {
                 createMainTitle(),
                 createSubText(),
                 createInputLayout(),
-                createButtonLayout(),
                 createMsgLayout()
         );
         mainLayout.setPadding(new Insets(20));
@@ -70,14 +55,9 @@ class FibView extends Application {
     private Node createSubText() {
         Text subText = new Text(
                 "Les neuf premiers termes de la suite Fibonnacci sont\n" +
-                        "les suivants : "
+                        "les suivants : 1, 1, 2, 3, 5, 8, 13, 21, 34..."
         );
-        for (int i = 1; i < 10; i++) {
-            String tempTxt;
-            tempTxt = FibonacciGetter.getFibonacciNum(i) + ", ";
-            if (i == 9) tempTxt += "...";
-            subText.setText(subText.getText().concat(tempTxt));
-        }
+
         subText.setTextAlignment(TextAlignment.CENTER);
 
         StackPane subTextLayout = new StackPane(subText);
@@ -87,8 +67,6 @@ class FibView extends Application {
     }
 
     private Node createInputLayout() {
-        TextField tfIndex = new TextField();
-
         HBox inputLayout = new HBox(
                 10,
                 new Text("Inscrire le rang du nombre de Fibonacci voulu : "),
@@ -96,50 +74,25 @@ class FibView extends Application {
         );
         inputLayout.setAlignment(Pos.CENTER);
 
-        tfIndex.textProperty().addListener((observable, oldValue, newValue) -> {
-            getPresenter().updateModelFromView(newValue);
-        });
-
         return inputLayout;
     }
 
-    private Node createButtonLayout() {
-        Button btn = new Button();
-        btn.setOnAction(event -> {
-            getPresenter().updateMsgFromModel();
-        });
-
-        HBox btnLayout = new HBox(
-                10,
-                btn,
-                new Text("Déterminer le nombre Fibbonacci")
-        );
-        btnLayout.setAlignment(Pos.CENTER);
-
-        return btnLayout;
-    }
     private Node createMsgLayout() {
+        txtMessage = new Text("SVP entrer une rangée.");
         StackPane msgLayout = new StackPane(txtMessage);
         msgLayout.setAlignment(Pos.CENTER);
 
         return msgLayout;
     }
 
-    //MÉTHODES
+    //Getters
 
-    void setMsg(String msg) {
-        txtMessage.setText(msg);
+    TextField getTextField() {
+        return tfIndex;
     }
 
-    //SETUP
-
-    FibPresenter getPresenter() {
-        return fibPresenter;
+    Text getText() {
+        return txtMessage;
     }
-
-    void setPresenter(FibPresenter fibPresenter) {
-        this.fibPresenter = fibPresenter;
-    }
-
 
 }

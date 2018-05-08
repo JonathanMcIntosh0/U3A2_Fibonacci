@@ -14,8 +14,4 @@ class MessageGetter {
                         "SVP entrer un rang plus petit!"
         );
     }
-
-    static String clearMsg() {
-        return "";
-    }
 }

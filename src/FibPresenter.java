@@ -1,61 +1,50 @@
-import javafx.application.Application;
-
 class FibPresenter {
 
-    private FibModel fibModel;
-    private FibView fibView;
+    private final FibModel fibModel;
+    private final FibView fibView;
+
+    FibPresenter(FibModel fibModel, FibView fibView) {
+        this.fibModel = fibModel;
+        this.fibView = fibView;
+    }
 
     // SETUP
 
-    FibModel getModel() {
+    private FibModel getModel() {
         return fibModel;
     }
 
-    void setModel(FibModel fibModel) {
-        this.fibModel = fibModel;
-    }
-
-    FibView getView() {
+    private FibView getView() {
         return fibView;
-    }
-
-    void setView(FibView fibView) {
-        this.fibView = fibView;
     }
 
     //INTERACTIONS
 
-    void updateModelFromView(String strIndex) {
-        if (!Verifier.validInt(strIndex)) {
-            getModel().setCurrentIndexValide(false);
-            getView().setMsg(MessageGetter.getInvalidIntMsg());
-        } else {
-            getModel().setCurrentIndexValide(true);
-            getModel().setIndex(Integer.parseInt(strIndex));
-            getView().setMsg(MessageGetter.clearMsg());
-        }
-    }
+    private void updateView(String strIndex){
+        String msg;
 
-    void updateMsgFromModel() {
-        if (getModel().isCurrentIndexValide()) {
-            int index = getModel().getIndex();
+        if (Verifier.validInt(strIndex)) {
+            int index = Integer.parseInt(strIndex);
             long num;
-            String msg;
+
             try {
-                num = FibonacciGetter.getFibonacciNum(index);
+                num = getModel().getFibonacciNum(index);
                 msg = MessageGetter.getAnswerMsg(index, num);
             } catch (ArithmeticException e) {
                 msg = MessageGetter.getNumTooBigMsg(index);
             }
-            getView().setMsg(msg);
 
+        } else {
+            msg = MessageGetter.getInvalidIntMsg();
         }
+
+        getView().getText().setText(msg);
     }
 
-    //RUN PROGRAM
-
-    void run(String[] args) {
-        fibView.setPresenter(this);
-        Application.launch(FibView.class, args);
+    void run() {
+        getView().getTextField().textProperty().addListener(
+                (observable, oldValue, newValue) ->
+                        updateView(newValue)
+        );
     }
 }

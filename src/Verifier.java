@@ -1,5 +1,4 @@
 class Verifier {
-
     static boolean validInt(String txt) {
         int n;
         try {
@@ -7,9 +6,6 @@ class Verifier {
         } catch (NumberFormatException e) {
             return false;
         }
-        if (n <= 0) {
-            return false;
-        }
-        return true;
+        return n > 0;
     }
 }
